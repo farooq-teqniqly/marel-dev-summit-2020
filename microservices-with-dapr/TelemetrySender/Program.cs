@@ -20,7 +20,7 @@ namespace TelemetrySender
                 new HttpClient());
 
             // Send temperature readings every second to Azure Event Hub.
-            Console.WriteLine("Sending temperature readings. Press ESC to stop.");
+            Console.WriteLine("Sending temperature readings...");
 
             using (sender)
             {
