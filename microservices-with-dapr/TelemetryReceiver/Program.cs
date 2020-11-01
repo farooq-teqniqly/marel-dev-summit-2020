@@ -7,6 +7,8 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 
 namespace TelemetryReceiver
@@ -38,6 +40,16 @@ namespace TelemetryReceiver
 
     public class Startup
     {
+        private static readonly int daprPort = 9999;
+        private static readonly string stateStoreName = "statestore-redis";
+        private static readonly string stateStoreUri = $"http://localhost:{daprPort}/v1.0/state/{stateStoreName}";
+        private static readonly HttpClient http = new HttpClient();
+
+        public Startup()
+        {
+            http.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+        }
+
         public void Configure(IApplicationBuilder app)
         {
             app.Map("/dapr/subscribe", SubscribeHandler);
@@ -77,11 +89,10 @@ namespace TelemetryReceiver
                         var reader = new StreamReader(context.Request.Body);
                         var body = reader.ReadToEnd();
 
-                        var data = JObject.Parse(body)["data"].ToString();
+                        var dataObj = JObject.Parse(body)["data"];
+                        var saveStateResult = await SaveState(Guid.NewGuid().ToString(), dataObj);
                         
-                        Console.WriteLine(data);
-
-                        await context.Response.WriteAsync(data);
+                        await context.Response.WriteAsync(dataObj.ToString());
                         //await Task.Delay(TimeSpan.FromSeconds(1));
                     }
                 }
@@ -91,6 +102,16 @@ namespace TelemetryReceiver
                     await context.Response.WriteAsync(string.Empty);
                 }
             });
+        }
+
+        private async static Task<string> SaveState(string key, object value)
+        {
+            var keyValuePair = new { key, value };
+            var content = new StringContent(JsonConvert.SerializeObject(new[] { keyValuePair }));
+            var response = await http.PostAsync(stateStoreUri, content);
+            var responseContent = await response.Content.ReadAsStringAsync();
+
+            return responseContent;
         }
     }
 }
