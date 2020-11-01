@@ -39,3 +39,16 @@ If you have the Redis CLI installed you can verify the telemetry has been saved 
 1. Run the ```KEYS *``` command to list all the keys. The keys should start with ```telemetryreceiver```. DAPR adds this key prefix because that was passed as the ```--app-id``` parameter to ```dapr run```.
 2. Pick a key and run the ```hgetall``` command to see the telemetry data.
 3. Run ```flushdb``` to remove all data.
+
+### Store Telemetry in Azure SQL
+One of DAPR's value propositions is the ability to switch state stores through configuration rather than recompilation.
+
+1. Stop the receiver app. The sender app does not have to be stopped.
+2. Comment all the lines in ```statestore_redis.yml``` and save the file.
+3. Uncomment all the lines in ```statestore_sql.yml``` and save the file.
+4. Start the receiver app.
+
+### Verify the Data in Azure SQL
+
+Connect to the Azure SQL database and query the ```telemetrydata``` table to see the saved telemetry data. Because the table did not exist, DAPR created it.
+

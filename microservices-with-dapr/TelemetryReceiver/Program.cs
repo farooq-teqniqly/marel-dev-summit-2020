@@ -41,7 +41,7 @@ namespace TelemetryReceiver
     public class Startup
     {
         private static readonly int daprPort = 9999;
-        private static readonly string stateStoreName = "statestore-redis";
+        private static readonly string stateStoreName = "statestore";
         private static readonly string stateStoreUri = $"http://localhost:{daprPort}/v1.0/state/{stateStoreName}";
         private static readonly HttpClient http = new HttpClient();
 
@@ -110,6 +110,15 @@ namespace TelemetryReceiver
             var content = new StringContent(JsonConvert.SerializeObject(new[] { keyValuePair }));
             var response = await http.PostAsync(stateStoreUri, content);
             var responseContent = await response.Content.ReadAsStringAsync();
+
+            if (response.IsSuccessStatusCode)
+            {
+                Console.WriteLine("STATE SAVED.");
+            }
+            else
+            {
+                Console.WriteLine($"ERROR SAVING STATE.\n{responseContent}");
+            }
 
             return responseContent;
         }

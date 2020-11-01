@@ -1,0 +1,13 @@
+﻿#apiVersion: dapr.io/v1alpha1
+#kind: Component
+#metadata:
+#  name: statestore
+#spec:
+#  type: state.sqlserver
+#  metadata:
+#  - name: connectionString
+#    value: "server=telemetrysql.database.windows.net;user id=MarelSuperUser;password=#QZ3gRbtkyjNNpFaR8RQ;port=1433;database=telemetry;"
+#  - name: tableName
+#    value: "telemetrydata"
+
+    
