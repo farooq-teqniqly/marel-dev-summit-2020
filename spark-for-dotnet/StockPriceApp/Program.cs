@@ -24,7 +24,10 @@ namespace StockPriceApp
             var outputFilePath = Path.Join(args[3], $"{symbol}-{year}-summary.txt");
 
             // Create Spark session.
-            var spark = SparkSession.Builder().AppName("stock-price-app").GetOrCreate();
+            var spark = SparkSession
+                .Builder()
+                .AppName("stock-price-app")
+                .GetOrCreate();
 
             Console.WriteLine($"Reading file {inputFilePath}...");
 
