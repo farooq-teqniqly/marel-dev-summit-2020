@@ -1,7 +1,8 @@
 {
   "profiles": {
     "StockPriceApp": {
-      "commandName": "Project"
+      "commandName": "Project",
+      "commandLineArgs": "aapl 2017 \"C:\\Users\\User\\Downloads\\Data\\Stocks\" \"C:\\temp\""
     }
   }
 }
