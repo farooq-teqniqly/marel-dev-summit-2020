@@ -1,5 +1,4 @@
-﻿using Microsoft.Data.Analysis;
-using Microsoft.Spark.Sql;
+﻿using Microsoft.Spark.Sql;
 using Newtonsoft.Json;
 using System;
 using System.IO;
